@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using ssh key
-      uses: lamarwhite/sandbox@test_gh_actions
+      uses: lamarwhitej/sandbox@test_gh_actions
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
