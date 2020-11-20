@@ -4,7 +4,7 @@ set -eu
 
 printf '\033[33m Warning: This action does not currently support host verification; verification is disabled. \n \033[0m\n'
 
-SSHPATH="$HOME/.ssh"
+SSHPATH="~/.ssh"
 
 if [ ! -d "$SSHPATH" ]
 then
