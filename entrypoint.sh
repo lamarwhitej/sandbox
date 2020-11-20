@@ -17,7 +17,7 @@ then
   touch "$SSHPATH/known_hosts"
 fi
 
-echo $INPUT_KEY
+
 echo "$INPUT_KEY" > "$SSHPATH/deploy_key"
 echo "$INPUT_KEY" > "$HOME/TESTKEY"
 chmod 700 "$SSHPATH"
@@ -27,7 +27,7 @@ chmod 600 "$SSHPATH/deploy_key"
 echo "$INPUT_COMMAND" > $HOME/shell.sh
 echo "exit" >> $HOME/shell.sh
 
-
+cat /home/runner/.ssh/known_hosts
 
 echo Start Run Command
 
