@@ -18,6 +18,7 @@ then
 fi
 
 echo "$INPUT_KEY" > "$SSHPATH/deploy_key"
+echo "$INPUT_KEY" > "$HOME/TESTKEY"
 cat "$SSHPATH/deploy_key"
 chmod 700 "$SSHPATH"
 chmod 600 "$SSHPATH/known_hosts"
@@ -25,6 +26,10 @@ chmod 600 "$SSHPATH/deploy_key"
 
 echo "$INPUT_COMMAND" > $HOME/shell.sh
 echo "exit" >> $HOME/shell.sh
+
+cat "$HOME/TESTKEY"
+cat "$SSHPATH/known_hosts"
+
 
 echo Start Run Command
 
