@@ -12,6 +12,7 @@ jobs:
         command: |
             whoami
             cat $HOME/.ssh/deploy_key
+            echo $HOME
         host: ${{ secrets.HOST }}
         user: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
