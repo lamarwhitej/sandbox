@@ -23,6 +23,7 @@ jobs:
             Host surelinelinuxvm
               HostName  $PROXY_SSH_HOST
               User sureline
+              IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
             END
       env:
