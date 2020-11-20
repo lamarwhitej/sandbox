@@ -4,7 +4,7 @@ set -eu
 
 printf '\033[33m Warning: This action does not currently support host verification; verification is disabled. \n \033[0m\n'
 
-SSHPATH="~/.ssh"
+SSHPATH="/home/runner/.ssh"
 
 if [ ! -d "$SSHPATH" ]
 then
@@ -27,7 +27,7 @@ chmod 600 "$SSHPATH/deploy_key"
 echo "$INPUT_COMMAND" > $HOME/shell.sh
 echo "exit" >> $HOME/shell.sh
 
-cat ~/.ssh/known_hosts
+cat /home/runner/.ssh/known_hosts
 
 echo Start Run Command
 
