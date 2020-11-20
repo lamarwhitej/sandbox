@@ -1,2 +1,2 @@
-I'm Just a test.
+Just a test.
 Testing.
