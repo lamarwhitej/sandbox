@@ -11,7 +11,6 @@ then
   mkdir "$SSHPATH"
 fi
 
-rm "$SSHPATH/known_hosts"
 
 if [ ! -f "$SSHPATH/known_hosts" ]
 then
