@@ -1,2 +1,2 @@
-Me just a test.
+Just a test.
 Testing.
