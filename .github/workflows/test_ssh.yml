@@ -12,16 +12,27 @@ jobs:
             echo "$SSH_KEY" > ~/.ssh/staging.key
             chmod 600 ~/.ssh/staging.key
             cat >>~/.ssh/config << END
-            Host staging
+            Host gcpweb1
               HostName $SSH_HOST
               User $SSH_USER
               IdentityFile ~/.ssh/staging.key
+              ProxyJump surelinelinuxvm
               StrictHostKeyChecking no
+
+            Host gcp*
+              IdentityFile ~/.ssh/staging.key
+              User root
+              ForwardAgent yes
+
+            Host surelinelinuxvm
+              HostName  $PROXY_SSH_HOST
+              User sureline
             END
       env:
             SSH_HOST: ${{ secrets.HOST }}
             SSH_USER: ${{ secrets.USERNAME }}
             SSH_KEY: ${{ secrets.KEY }}
+            PROXY_SSH_HOST: ${{ secrets.PROXY_HOST }}
 
     - name: Check out the source
-      run: ssh staging 'cd datpiff-es-migration && git pull'
+      run: ssh gcpweb1 'cd datpiff-es-migration && git pull'
