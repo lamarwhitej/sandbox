@@ -35,4 +35,4 @@ jobs:
             PROXY_SSH_HOST: ${{ secrets.PROXY_HOST }}
 
     - name: Check out the source
-      run: ssh gcpweb1 'cd datpiff-es-migration && git pull'
+      run: ssh gcpweb1 'cd /home && git pull'
