@@ -24,4 +24,4 @@ jobs:
             SSH_KEY: ${{ secrets.KEY }}
 
     - name: Check out the source
-      run: ssh staging 'cd datpiff-es-migration && git pull''
+      run: ssh staging 'cd datpiff-es-migration && git pull'
