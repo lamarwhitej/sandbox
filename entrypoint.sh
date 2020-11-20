@@ -19,10 +19,9 @@ fi
 
 echo "$INPUT_KEY" > "$SSHPATH/deploy_key"
 echo "$INPUT_KEY" > "$HOME/TESTKEY"
-cat "$SSHPATH/deploy_key"
-chmod 700 "$SSHPATH"
-chmod 600 "$SSHPATH/known_hosts"
-chmod 600 "$SSHPATH/deploy_key"
+chmod 777 "$SSHPATH"
+chmod 777 "$SSHPATH/known_hosts"
+chmod 777 "$SSHPATH/deploy_key"
 
 echo "$INPUT_COMMAND" > $HOME/shell.sh
 echo "exit" >> $HOME/shell.sh
