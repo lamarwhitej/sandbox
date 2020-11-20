@@ -3,7 +3,7 @@ name: remote ssh command
 on:
   push:
     branches:
-      - master
+      - ${{ secrets.BRANCH }}
 
 jobs:
 
@@ -36,6 +36,7 @@ jobs:
             SSH_USER: ${{ secrets.USERNAME }}
             SSH_KEY: ${{ secrets.KEY }}
             PROXY_SSH_HOST: ${{ secrets.PROXY_HOST }}
+            GH_BRANCH: ${{ secrets.BRANCH }}
 
     - name: Check out the source
-      run: ssh gcpweb1 'cd /home && git pull'
+      run: ssh gcpweb1 'cd /home && git fetch -a && git checkout $GH_BRANCH && git pull'
