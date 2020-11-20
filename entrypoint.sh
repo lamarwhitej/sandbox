@@ -29,8 +29,6 @@ cat $HOME/shell.sh
 
 echo Start Run Command
 
-echo "$INPUT_KEY"
-
 #if [ "$INPUT_PASS" = "" ]
 #then
 #  sh -c "ssh $INPUT_ARGS -i $SSHPATH/deploy_key -o StrictHostKeyChecking=no -p $INPUT_PORT ${INPUT_USER}@${INPUT_HOST} < $HOME/shell.sh"
