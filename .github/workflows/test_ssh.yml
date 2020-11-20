@@ -7,12 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using ssh key
-      uses: lamarwhitej/sandbox@test_gh_actions
+      uses: fifsky/ssh-action@master
       with:
         command: |
             whoami
-            cat $HOME/.ssh/deploy_key
-            echo $HOME
         host: ${{ secrets.HOST }}
         user: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
