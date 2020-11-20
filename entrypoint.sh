@@ -27,7 +27,7 @@ chmod 600 "$SSHPATH/deploy_key"
 echo "$INPUT_COMMAND" > $HOME/shell.sh
 echo "exit" >> $HOME/shell.sh
 
-cat /home/runner/.ssh/known_hosts
+cat ~/.ssh/known_hosts
 
 echo Start Run Command
 
