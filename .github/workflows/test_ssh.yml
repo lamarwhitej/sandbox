@@ -3,7 +3,7 @@ name: remote ssh command
 on:
   push:
     branches:
-      - ${{ secrets.BRANCH }}
+      - test_gh_actions
 
 jobs:
 
