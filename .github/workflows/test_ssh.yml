@@ -17,7 +17,6 @@ jobs:
               User $SSH_USER
               IdentityFile ~/.ssh/staging.key
               ProxyJump surelinelinuxvm
-              StrictHostKeyChecking no
 
             Host gcp*
               IdentityFile ~/.ssh/staging.key
