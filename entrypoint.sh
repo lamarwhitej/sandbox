@@ -25,7 +25,6 @@ chmod 600 "$SSHPATH/deploy_key"
 
 echo "$INPUT_COMMAND" > $HOME/shell.sh
 echo "exit" >> $HOME/shell.sh
-cat $HOME/shell.sh
 
 echo Start Run Command
 
