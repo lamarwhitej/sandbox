@@ -17,16 +17,13 @@ jobs:
               User $SSH_USER
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
-              ProxyJump surelinelinuxvm
-
-            Host gcp*
-              IdentityFile ~/.ssh/staging.key
-              User root
               ForwardAgent yes
+              ProxyJump surelinelinuxvm
 
             Host surelinelinuxvm
               HostName  $PROXY_SSH_HOST
               User sureline
+              StrictHostKeyChecking no
             END
       env:
             SSH_HOST: ${{ secrets.HOST }}
