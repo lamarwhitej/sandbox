@@ -31,4 +31,4 @@ jobs:
             GH_BRANCH: ${{ secrets.BRANCH }}
 
     - name: Check out the source
-      run: ssh gcpweb1 'cd /home && git fetch -a && git checkout $GH_BRANCH && git pull'
+      run: ssh gcpweb1 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
