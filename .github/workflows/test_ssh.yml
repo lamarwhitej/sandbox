@@ -66,6 +66,7 @@ jobs:
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
               ForwardAgent yes
+            END
       env:
             SSH_HOST: ${{ secrets.HOST }}
             SSH_USER: ${{ secrets.USERNAME }}
