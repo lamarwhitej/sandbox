@@ -2,7 +2,9 @@ name: remote ssh command
 #on: [push]
 on:
   push:
-    branches: ${{ secrets.BRANCH }}
+    branches:
+       - master
+       - test_gh_actions
 
 jobs:
 
@@ -11,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using ssh key
+      uses: medialab-ai/datpiff-website-legacy@main
       run: |
             mkdir -p ~/.ssh/
             echo "$SSH_KEY" > ~/.ssh/staging.key
