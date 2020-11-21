@@ -23,14 +23,6 @@ jobs:
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
               ForwardAgent yes
-              ProxyJump surelinelinuxvm
-
-            Host surelinelinuxvm
-              HostName  $PROXY_SSH_HOST
-              User sureline
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-            END
       env:
             SSH_HOST: ${{ secrets.HOST }}
             SSH_USER: ${{ secrets.USERNAME }}
