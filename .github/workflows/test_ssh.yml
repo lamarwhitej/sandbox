@@ -2,8 +2,7 @@ name: remote ssh command
 #on: [push]
 on:
   push:
-    branches:
-      - ${{ secrets.BRANCH }}
+    branches: ${{ secrets.BRANCH }}
 
 jobs:
 
