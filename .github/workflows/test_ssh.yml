@@ -67,8 +67,15 @@ jobs:
               StrictHostKeyChecking no
               ForwardAgent yes
             END
-      env:
-            SSH_HOST: ${{ secrets.HOST }}
+      env:            
+            SSH_HOST_WEBAPP_1: ${{ secrets.SSH_HOST_WEBAPP_1 }}
+            SSH_HOST_WEBAPP_2: ${{ secrets.SSH_HOST_WEBAPP_2 }}
+            SSH_HOST_WEBAPP_3: ${{ secrets.SSH_HOST_WEBAPP_3 }}
+            SSH_HOST_WEBAPP_4: ${{ secrets.SSH_HOST_WEBAPP_4 }}
+            SSH_HOST_WEBAPP_5: ${{ secrets.SSH_HOST_WEBAPP_5 }}
+            SSH_HOST_WEBAPP_6: ${{ secrets.SSH_HOST_WEBAPP_6 }}
+            SSH_HOST_WEBAPP_7: ${{ secrets.SSH_HOST_WEBAPP_7 }}
+            SSH_HOST_WEBAPP_8: ${{ secrets.SSH_HOST_WEBAPP_8 }}
             SSH_USER: ${{ secrets.USERNAME }}
             SSH_KEY: ${{ secrets.KEY }}
             PROXY_SSH_HOST: ${{ secrets.PROXY_HOST }}
