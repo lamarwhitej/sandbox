@@ -5,101 +5,26 @@ on:
        - master
        - test_gh_actions
 
+env:
+  PROJECT_ID: ${{ secrets.GCE_PROJECT }}
+  GCE_INSTANCE: datpiff-webapp-1  # TODO: update to instance name
+  GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
+
 jobs:
-
-  deploy:
-    name: Build
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
+
     steps:
-    - name: executing remote ssh commands using ssh key
-      run: |
-            mkdir -p ~/.ssh/
-            echo "$SSH_KEY" > ~/.ssh/staging.key
-            chmod 600 ~/.ssh/staging.key
-            cat >>~/.ssh/config << END
-            Host gcpweb1
-              HostName $SSH_HOST_WEBAPP_1
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb2
-              HostName $SSH_HOST_WEBAPP_2
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb3
-              HostName $SSH_HOST_WEBAPP_3
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb4
-              HostName $SSH_HOST_WEBAPP_4
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb5
-              HostName $SSH_HOST_WEBAPP_5
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb6
-              HostName $SSH_HOST_WEBAPP_6
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb7
-              HostName $SSH_HOST_WEBAPP_7
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            Host gcpweb8
-              HostName $SSH_HOST_WEBAPP_8
-              User root
-              IdentityFile ~/.ssh/staging.key
-              StrictHostKeyChecking no
-              ForwardAgent yes
-            END
-      env:            
-            SSH_HOST_WEBAPP_1: ${{ secrets.SSH_HOST_WEBAPP_1 }}
-            SSH_HOST_WEBAPP_2: ${{ secrets.SSH_HOST_WEBAPP_2 }}
-            SSH_HOST_WEBAPP_3: ${{ secrets.SSH_HOST_WEBAPP_3 }}
-            SSH_HOST_WEBAPP_4: ${{ secrets.SSH_HOST_WEBAPP_4 }}
-            SSH_HOST_WEBAPP_5: ${{ secrets.SSH_HOST_WEBAPP_5 }}
-            SSH_HOST_WEBAPP_6: ${{ secrets.SSH_HOST_WEBAPP_6 }}
-            SSH_HOST_WEBAPP_7: ${{ secrets.SSH_HOST_WEBAPP_7 }}
-            SSH_HOST_WEBAPP_8: ${{ secrets.SSH_HOST_WEBAPP_8 }}
-            SSH_USER: ${{ secrets.USERNAME }}
-            SSH_KEY: ${{ secrets.KEY }}
-            PROXY_SSH_HOST: ${{ secrets.PROXY_HOST }}
-            GH_BRANCH: ${{ secrets.BRANCH }}
+    - name: Checkout
+      uses: actions/checkout@v2
 
-    - name: Update GCP WebApp 1
-      run: ssh gcpweb1 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 2
-      run: ssh gcpweb2 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 3
-      run: ssh gcpweb3 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 4
-      run: ssh gcpweb4 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 5
-      run: ssh gcpweb5 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 6
-      run: ssh gcpweb6 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 7
-      run: ssh gcpweb7 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-
-    - name: Update GCP WebApp 8
-      run: ssh gcpweb8 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.GCE_SA_KEY }}
+        project_id: ${{ secrets.GCE_PROJECT }}
+    - name: Deploy
+      run: |-
+        gcloud compute instances list --filter="name:datpiff-webapp*"
