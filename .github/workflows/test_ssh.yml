@@ -7,6 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
+  GH_BRANCH: ${{ secrets.BRANCH }}
   SSH_KEY: ${{ secrets.KEY }}
   GCE_INSTANCE: datpiff-webapp-1  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
@@ -27,7 +28,7 @@ jobs:
         service_account_key: ${{ secrets.GCE_SA_KEY }}
         project_id: ${{ secrets.GCE_PROJECT }}
     - name: Deploy
-      run: |-
+      run: |
         mkdir -p ~/.ssh/
         echo "$SSH_KEY" > ~/.ssh/staging.key
         chmod 600 ~/.ssh/staging.key
