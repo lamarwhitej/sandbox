@@ -33,15 +33,7 @@ jobs:
         echo "$SSH_KEY" > ~/.ssh/staging.key
         chmod 600 ~/.ssh/staging.key
         HOSTIP=$(gcloud compute instances list --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
         for i in $HOSTIP
-        do
-            cat >>~/.ssh/config << EOF
-            Host gcpweb1
-                HostName $i
-                User root
-                IdentityFile ~/.ssh/staging.key
-                StrictHostKeyChecking no
-                ForwardAgent yes
-            EOF
-            ssh gcpweb1 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
+            ssh -o StrictHostKeyChecking=no -i root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
         done
