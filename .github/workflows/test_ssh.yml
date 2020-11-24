@@ -35,5 +35,6 @@ jobs:
         HOSTIP=$(gcloud compute instances list --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
 
         for i in $HOSTIP
+        do
             ssh -o StrictHostKeyChecking=no -i root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
         done
