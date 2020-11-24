@@ -42,6 +42,6 @@ jobs:
                 IdentityFile ~/.ssh/staging.key
                 StrictHostKeyChecking no
                 ForwardAgent yes
-            END                
+            END
             ssh gcpweb1 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
         done
