@@ -7,6 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
+  SSH_KEY: ${{ secrets.KEY }}
   GCE_INSTANCE: datpiff-webapp-1  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
 
@@ -27,4 +28,11 @@ jobs:
         project_id: ${{ secrets.GCE_PROJECT }}
     - name: Deploy
       run: |-
-        gcloud compute instances list --filter="name:datpiff-webapp*"
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        HOSTIP=$(gcloud compute instances list --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+        for i in $HOSTIP
+        do
+            echo $i
+        done
