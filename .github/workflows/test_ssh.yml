@@ -9,7 +9,6 @@ env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
   GH_BRANCH: ${{ secrets.BRANCH }}
   SSH_KEY: ${{ secrets.KEY }}
-  GCE_INSTANCE: datpiff-webapp-1  # TODO: update to instance name
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
 
 jobs:
