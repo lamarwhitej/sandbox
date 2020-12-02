@@ -39,7 +39,6 @@ jobs:
         #    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
         #done
 
-    - uses: lamarwhitej/sandbox@test_gh_actions
     - name: Update HAProxy Config
       run: |
         mkdir -p ~/.ssh/
@@ -49,7 +48,7 @@ jobs:
 
         for i in $PROXYIP
         do
-            gcloud compute scp README.md dapiff-haproxy-1113-vm:/home/joshuawhite/
+            gcloud compute scp README.md datpiff-haproxy-1113-vm:/home/joshuawhite/
             #scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key haproxy/haproxy.cfg root@$i:/root/haproxy.cfg
             #ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo cp haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg && sudo service haproxy reload'
         done
