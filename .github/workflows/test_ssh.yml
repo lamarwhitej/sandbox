@@ -39,9 +39,7 @@ jobs:
         #    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
         #done
 
-    - name: Checkout
-      uses: lamarwhitej/sandbox@test_gh_actions
-
+    - uses: lamarwhitej/sandbox@test_gh_actions
     - name: Update HAProxy Config
       run: |
         mkdir -p ~/.ssh/
