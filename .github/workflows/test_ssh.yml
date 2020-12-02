@@ -32,8 +32,23 @@ jobs:
         echo "$SSH_KEY" > ~/.ssh/staging.key
         chmod 600 ~/.ssh/staging.key
         HOSTIP=$(gcloud compute instances list --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+        PROXYIP=$(gcloud compute instances list --filter="name:datpiff-haproxy*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
 
-        for i in $HOSTIP
+        #for i in $HOSTIP
+        #do
+        #    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
+        #done
+    - name: Update HAProxy Config
+      uses: lamarwhitej/sandbox@test_gh_actions
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        PROXYIP=$(gcloud compute instances list --filter="name:datpiff-haproxy*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+        for i in $PROXYIP
         do
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
+            gcloud compute scp README.md dapiff-haproxy-1113-vm:/home/joshuawhite/
+            #scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key haproxy/haproxy.cfg root@$i:/root/haproxy.cfg
+            #ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo cp haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg && sudo service haproxy reload'
         done
