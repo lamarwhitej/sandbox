@@ -33,7 +33,7 @@ jobs:
         chmod 600 ~/.ssh/staging.key
         HOSTIP=$(gcloud compute instances list --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
         PROXYIP=$(gcloud compute instances list --filter="name:datpiff-haproxy*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
-        gcloud compute scp --zone=$GCE_INSTANCE_ZONE README.md datpiff-haproxy-1113-vm:/home/joshuawhite/
+        gcloud compute scp --zone=$GCE_INSTANCE_ZONE README.md datpiff-haproxy-1113-vm:/home/joshuawhite
 
         #for i in $HOSTIP
         #do
