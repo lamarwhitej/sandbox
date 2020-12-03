@@ -49,6 +49,7 @@ jobs:
             for i in $PROXYIP
             do
                 gcloud compute scp --zone=$zone README.md $i:/tmp
+                gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md"
                 #FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md")
 
                 #if [ ! -z $FILE_DIFF ]
