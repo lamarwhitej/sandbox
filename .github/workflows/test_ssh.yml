@@ -41,7 +41,7 @@ jobs:
         done
     - name: Update HAProxy Config
       run: |
-        CHANGED_FILES=$(git diff --name-only ${{ github.event.after }}..${{ github.event.before }})
+        CHANGED_FILES=$(git diff --name-only ${{ github.event.test_gh_actions }}..${{ github.event.before }})
         echo $CHANGED_FILES
 
         for zone in us-central1-a us-central1-b us-central1-c us-central1-f
