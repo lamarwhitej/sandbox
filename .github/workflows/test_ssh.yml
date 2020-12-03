@@ -26,7 +26,7 @@ jobs:
         version: '290.0.1'
         service_account_key: ${{ secrets.GCE_SA_KEY }}
         project_id: ${{ secrets.GCE_PROJECT }}
-    - name: Deploy
+    - name: Update Webapp Servers
       run: |
         mkdir -p ~/.ssh/
         echo "$SSH_KEY" > ~/.ssh/staging.key
@@ -34,12 +34,17 @@ jobs:
         for zone in us-central1-a us-central1-b us-central1-c us-central1-f
         do
             HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
-            PROXYIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
 
             for i in $HOSTIP
             do
                 ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
             done
+        done
+    - name: Update HAProxy Config
+      run: |
+        for zone in us-central1-a us-central1-b us-central1-c us-central1-f
+        do
+            PROXYIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
 
             for i in $PROXYIP
             do
