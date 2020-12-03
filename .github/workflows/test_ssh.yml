@@ -9,7 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
   GH_BRANCH: ${{ secrets.BRANCH }}
   SSH_KEY: ${{ secrets.KEY }}
-  GCE_INSTANCE_ZONE: us-central1-a
+  GCE_INSTANCiE_ZONE: us-central1-a,us-central1-a,us-central1-a,us-central1-a
 
 jobs:
   setup-build-publish-deploy:
@@ -31,17 +31,20 @@ jobs:
         mkdir -p ~/.ssh/
         echo "$SSH_KEY" > ~/.ssh/staging.key
         chmod 600 ~/.ssh/staging.key
-        HOSTIP=$(gcloud compute instances list --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
-        PROXYIP=$(gcloud compute instances list --filter="name:datpiff-haproxy*" --format='get(NAME)')
-        #gcloud compute scp --zone=$GCE_INSTANCE_ZONE README.md datpiff-haproxy-1113-vm:/tmp
-
-        #for i in $HOSTIP
-        #do
-        #    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
-        #done
-
-        for i in $PROXYIP
+        for zone in us-central1-a us-central1-b us-central1-c us-central1-f
         do
-            gcloud compute scp --zone=$GCE_INSTANCE_ZONE README.md $i:/tmp
-            gcloud compute ssh $i --zone=$GCE_INSTANCE_ZONE --command="sudo mv /tmp/README.md /etc/haproxy"
+            HOSTIP=$(gcloud compute instances list --zone=$zone --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+            PROXYIP=$(gcloud compute instances list --zone=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
+            gcloud compute scp --zone=$zone README.md datpiff-haproxy-1113-vm:/tmp
+
+            for i in $HOSTIP
+            do
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
+            done
+
+            for i in $PROXYIP
+            do
+                gcloud compute scp --zone=$zone README.md $i:/tmp
+                gcloud compute ssh $i --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
+            done
         done
