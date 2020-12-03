@@ -35,7 +35,6 @@ jobs:
         do
             HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
             PROXYIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
-            gcloud compute scp --zone=$zone README.md datpiff-haproxy-1113-vm:/tmp
 
             for i in $HOSTIP
             do
