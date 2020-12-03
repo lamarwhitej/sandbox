@@ -53,9 +53,9 @@ jobs:
                 gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md" || :
                 FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md || :")
 
-                #if [ ! -z $FILE_DIFF ]
-                #then
-                #    gcloud compute ssh $i  --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
-                #fi
+                if [ ! -z $FILE_DIFF ]
+                then
+                    gcloud compute ssh $i  --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
+                fi
             done
         done
