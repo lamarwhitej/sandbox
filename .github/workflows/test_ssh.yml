@@ -40,11 +40,10 @@ jobs:
             done
         done
     - name: Update HAProxy Config
-      with:
-        fetch-depth: 0
       run: |
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         echo $CHANGED_FILES
+
         for zone in us-central1-a us-central1-b us-central1-c us-central1-f
         do
             PROXYIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
