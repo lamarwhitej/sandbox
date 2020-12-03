@@ -50,8 +50,8 @@ jobs:
             do
                 gcloud compute ssh $i  --zone=$zone --command="sudo rm -f /tmp/README.md"
                 gcloud compute scp --zone=$zone README.md $i:/tmp
-                gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md"
-                #FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md")
+                gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md" || :
+                FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md || :")
 
                 #if [ ! -z $FILE_DIFF ]
                 #then
