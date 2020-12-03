@@ -26,9 +26,6 @@ jobs:
         service_account_key: ${{ secrets.GCE_SA_KEY }}
         project_id: ${{ secrets.GCE_PROJECT }}
 
-    - uses: lamarwhitej/sandbox@test_gh_actions
-      with:
-        fetch-depth: 0
     - name: Update Webapp Servers
       run: |
         mkdir -p ~/.ssh/
@@ -45,9 +42,6 @@ jobs:
         done
     - name: Update HAProxy Config
       run: |
-        CHANGED_FILES=$(::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | xargs))
-        echo $CHANGED_FILES
-
         for zone in us-central1-a us-central1-b us-central1-c us-central1-f
         do
             PROXYIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
@@ -55,6 +49,11 @@ jobs:
             for i in $PROXYIP
             do
                 gcloud compute scp --zone=$zone README.md $i:/tmp
-                gcloud compute ssh $i --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
+                FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md")
+
+                if [ ! -z "$FILE_DIFF" ]
+                then
+                    gcloud compute ssh $i  --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
+                fi
             done
         done
