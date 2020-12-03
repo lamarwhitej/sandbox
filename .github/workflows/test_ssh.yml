@@ -43,4 +43,5 @@ jobs:
         for i in $PROXYIP
         do
             gcloud compute scp --zone=$GCE_INSTANCE_ZONE README.md $i:/tmp
+            gcloud compute ssh $i --command="sudo mv /tmp/README.md /etc/haproxy"
         done
