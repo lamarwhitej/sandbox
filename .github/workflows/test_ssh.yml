@@ -41,6 +41,7 @@ jobs:
         done
     - name: Update HAProxy Config
       run: |
+        git pull
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         echo $CHANGED_FILES
 
