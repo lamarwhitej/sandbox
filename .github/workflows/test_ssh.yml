@@ -58,3 +58,30 @@ jobs:
                 fi
             done
         done
+    - name: Update Apache Config
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        for zone in us-central1-a us-central1-b us-central1-c us-central1-f
+        do
+            HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+            for i in $HOSTIP
+            do
+                #Remove file in case it is there and created by another user
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo rm -f /tmp/README.md'
+
+                #Copy to safe location
+                scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key README.md $i:/tmp
+
+                #Check for diffs in file
+                FILE_DIFF=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'diff /tmp/README.md /etc/haproxy/README.md || true')
+
+                #Check if diffs copy file to location
+                if [ ! -z "$FILE_DIFF" ]
+                then
+                    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cp /tmp/README.md /etc/haproxy/README.md'
+                fi
+            done
+        done
