@@ -60,7 +60,7 @@ jobs:
                 #Check for diffs in file
                 FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md || true")
 
-                #If diffs copy file to location
+                #If diffs copy file to location and reload the service
                 if [ ! -z "$FILE_DIFF" ]
                 then
                     gcloud compute ssh $i  --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
@@ -89,7 +89,7 @@ jobs:
                 #Check for diffs in file
                 FILE_DIFF=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'diff /tmp/README.md /etc/httpd/conf/README.md || true')
 
-                #If diffs copy file to location
+                #If diffs copy file to location and restart the service
                 if [ ! -z "$FILE_DIFF" ]
                 then
                     ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo mv /tmp/README.md /etc/httpd/conf/README.md'
