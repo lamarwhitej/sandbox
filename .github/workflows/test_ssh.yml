@@ -73,7 +73,7 @@ jobs:
                 ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo rm -f /tmp/README.md'
 
                 #Copy to safe location
-                scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key README.md root$i:/tmp
+                scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key README.md root@$i:/tmp
 
                 #Check for diffs in file
                 FILE_DIFF=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'diff /tmp/README.md /etc/haproxy/README.md || true')
