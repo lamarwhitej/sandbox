@@ -76,12 +76,12 @@ jobs:
                 scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key README.md root@$i:/tmp
 
                 #Check for diffs in file
-                FILE_DIFF=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'diff /tmp/README.md /etc/haproxy/README.md || true')
+                FILE_DIFF=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'diff /tmp/README.md /etc/httpd/conf/README.md || true')
 
                 #Check if diffs copy file to location
                 if [ ! -z "$FILE_DIFF" ]
                 then
-                    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo mv /tmp/README.md /etc/haproxy/README.md'
+                    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo mv /tmp/README.md /etc/httpd/conf/README.md'
                 fi
             done
         done
