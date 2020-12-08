@@ -42,58 +42,21 @@ jobs:
                 ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
             done
         done
-    - name: Update HAProxy Config
-      run: |
-        for zone in us-central1-a us-central1-b us-central1-c us-central1-f
-        do
-            #Search for all datpiff-haproxy instances in zone
-            PROXYIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-haproxy*" --format='get(NAME)')
-
-            for i in $PROXYIP
-            do
-                #Remove file in case it is there and created by another user
-                gcloud compute ssh $i  --zone=$zone --command="sudo rm -f /tmp/README.md"
-
-                #Copy to safe location
-                gcloud compute scp --zone=$zone README.md $i:/tmp
-
-                #Check for diffs in file
-                FILE_DIFF=$(gcloud compute ssh $i --zone=$zone --command="diff /tmp/README.md /etc/haproxy/README.md || true")
-
-                #If diffs copy file to location and reload the service
-                if [ ! -z "$FILE_DIFF" ]
-                then
-                    gcloud compute ssh $i  --zone=$zone --command="sudo mv /tmp/README.md /etc/haproxy"
-                    #sudo service haproxy reload
-                fi
-            done
-        done
-    - name: Update Apache Config
+    - name: Update Processor Servers
       run: |
         mkdir -p ~/.ssh/
         echo "$SSH_KEY" > ~/.ssh/staging.key
         chmod 600 ~/.ssh/staging.key
         for zone in us-central1-a us-central1-b us-central1-c us-central1-f
         do
-            #Search for all datpiff-webapp instances in zone
-            HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+            #Search for all datpiff-proc instances in zone
+            HOSTNAME=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-proc-dev" --format='get(NAME)')
+            HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-proc-dev" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
 
+            #Change directory to home, check out branch, and do a git pull
             for i in $HOSTIP
             do
-                #Remove file in case it is there and created by another user
-                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo rm -f /tmp/README.md'
-
-                #Copy to safe location
-                scp -o StrictHostKeyChecking=no -i ~/.ssh/staging.key README.md root@$i:/tmp
-
-                #Check for diffs in file
-                FILE_DIFF=$(ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'diff /tmp/README.md /etc/httpd/conf/README.md || true')
-
-                #If diffs copy file to location and restart the service
-                if [ ! -z "$FILE_DIFF" ]
-                then
-                    ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'sudo mv /tmp/README.md /etc/httpd/conf/README.md'
-                    #sudo service httpd reload
-                fi
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /usr/bin/git fetch -a && /usr/bin/git pull'
+                #gcloud compute ssh $i  --zone=$zone --command="cd /home && /usr/bin/git fetch -a && /usr/bin/git pull"
             done
         done
