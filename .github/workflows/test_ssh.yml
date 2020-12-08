@@ -56,7 +56,7 @@ jobs:
             #Change directory to home, check out branch, and do a git pull
             for i in $HOSTIP
             do
-                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /usr/bin/git fetch -a && /usr/bin/git pull'
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /usr/bin/git fetch -a && /usr/bin/git checkout main && /usr/bin/git pull'
                 #gcloud compute ssh $i  --zone=$zone --command="cd /home && /usr/bin/git fetch -a && /usr/bin/git pull"
             done
         done
