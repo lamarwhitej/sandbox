@@ -1,0 +1,62 @@
+name: remote ssh command
+on:
+  push:
+    branches:
+       - master
+       - test_gh_actions
+
+env:
+  PROJECT_ID: ${{ secrets.GCE_PROJECT }}
+  GH_BRANCH: ${{ secrets.BRANCH }}
+  SSH_KEY: ${{ secrets.KEY }}
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.GCE_SA_KEY }}
+        project_id: ${{ secrets.GCE_PROJECT }}
+
+    - name: Update Webapp Servers
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        for zone in us-central1-a us-central1-b us-central1-c us-central1-f
+        do
+            #Search for all datpiff-webapp instances in zone
+            HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-webapp*" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+            #Change directory to home, check out branch, and do a git pull
+            for i in $HOSTIP
+            do
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /opt/git/bin/git fetch -a && /opt/git/bin/git checkout $GH_BRANCH && /opt/git/bin/git pull'
+            done
+        done
+    - name: Update Processor Servers
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        for zone in us-central1-a us-central1-b us-central1-c us-central1-f
+        do
+            #Search for all datpiff-proc instances in zone
+            HOSTNAME=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-proc-dev" --format='get(NAME)')
+            HOSTIP=$(gcloud compute instances list --zones=$zone --filter="name:datpiff-proc-dev" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+            #Change directory to home, check out branch, and do a git pull
+            for i in $HOSTIP
+            do
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key root@$i 'cd /home && /usr/bin/git fetch -a && /usr/bin/git checkout main && /usr/bin/git pull'
+                #gcloud compute ssh $i  --zone=$zone --command="cd /home && /usr/bin/git fetch -a && /usr/bin/git pull"
+            done
+        done
